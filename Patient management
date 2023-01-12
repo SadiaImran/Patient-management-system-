@@ -1,0 +1,419 @@
+import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
+class Pro1 {
+    public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        Random random = new Random();
+        Scanner scannerString = new Scanner(System.in);
+
+        String[] doctorsRoom = {"Room 1", "Room 2", "Room 3", "Room 4", "Room 5", "Dr Arif:\t\t8:00 AM to 2:30 PM", "Dr Saad:\t\t2:30 PM to 8:00 PM", "Dr Ahmed:\t\t8:00 PM to 12:30 AM",
+                "Dr Wasif:\t\t8:00 AM to 2:30 PM", "Dr Omar:\t\t2:30 PM to 8:00 PM", "Dr Ayesha:\t\t8:00 PM to 12:30 AM",
+                "Dr Saira:\t\t8:00 AM to 2:30 PM", "Dr Sofia:\t\t2:30 PM to 8:00 PM", "Dr Amna:\t\t8:00 PM to 12:30 AM",
+                "Dr Asif:\t\t8:00 AM to 2:30 PM", "Dr Kamran:\t\t2:30 PM to 8:00 PM", "Dr Aina:\t\t8:00 PM to 12:30 AM"};
+        String[] tempId = new String[17];
+        String[] tempBooked = new String[17];
+        String[] patient = new String[11];
+        // patient array
+        while (true) {
+            System.out.println("1. Enter: \n2. Exit:");
+            int choice = scanner.nextInt();
+
+            if (choice == 1) {
+                System.out.println("Select your module for further access you can select from:" + "\n" +
+                        "1. Patient" + "\n" +
+                        "2. Doctor" + "\n" +
+                        "3. Admin " + "\n" +
+                        "4. Bill " + "\n" +
+                        "5. report: ");
+
+                int module = scanner.nextInt();
+                if (module == 1) {
+                    while (true) {
+                        System.out.println("1. Sign Up\n2. Log In");
+                        int answer = scanner.nextInt();
+                        if (answer == 1) {
+                            while (true) {
+                                System.out.println("Press 1 to enter patient's Data or 0 to exit");
+                                String check = scanner.next();
+                                if (check.equals("0")) break;
+                                while (true) {
+                                    patient[0] = String.valueOf(random.nextInt(0, 50));
+                                    String[] patient_data = read(patient[0],0);
+                                    if (patient_data.length == 0) {
+                                        System.out.println("Unique");
+                                        break;
+                                    } else System.out.println(Arrays.toString(patient_data));
+                                }
+
+                                System.out.println("Enter your Name: ");//index 1
+                                patient[1] = scannerString.next();
+                                System.out.println("Enter your Email: "); //index 2
+                                patient[2] = scannerString.next();
+                                System.out.println("Enter your Password: ");//index 3
+                                patient[3] = scannerString.next();
+                                System.out.println("Enter your date of birth ( in letters: ");//index 4
+                                patient[4] = scannerString.next();
+                                System.out.println("Select your gender: male/female ");//index 5
+                                patient[5] = scannerString.next();
+                                System.out.println("Enter your Martial Status: Single/Married/Divorced ");//index 6
+                                patient[6] = scannerString.next();
+                                System.out.println("Enter your Disease: ");//index 7
+                                patient[7] = scannerString.next();
+                                System.out.println("Enter your roomType: Null/Economy/Business ");//index 8
+                                patient[8] = scannerString.next();
+                                System.out.println("Enter your Contact Number: e.g 03xx");//index 9
+                                patient[9] = scannerString.next();
+                                System.out.println("Enter your Age: e.g 19");//index 10
+                                patient[10] = scannerString.next();
+                                write(patient);
+                                System.out.println("You have successfully entered your data. ");
+                            }
+                            break;
+                        } else if (answer == 2) {
+                            String email = scannerString.next();
+                            String password = scannerString.next();
+                            String[] patientEmail = read(email,1);
+                            String[] patientPasswords = read(password,2);
+                            if (patientEmail[1].equals(email) &&patientPasswords[2].equals(password)){
+                                System.out.println("You logged in");
+                                break;
+                            }
+                            else {
+                                System.out.println("Incorrect Email or password");
+                            }
+                        } else System.out.println("Invalid");
+
+                    }
+
+                    while (true) {
+                        System.out.println("Select from the following options: " + "\n" +
+                                "1. To display data" + "\n" +
+                                "2. Delete data\n0. To Exit");
+                        int options = scanner.nextInt();
+                        if (options == 1) {
+                            System.out.println("enter patients id");
+                            String id = scannerString.next();
+                            String[] patient_data = read(id,0);
+                            displayPatientData(patient_data);
+                        } else if (options == 2) {
+                            System.out.println("enter id to be deleted");
+                            String id = scannerString.next();
+                            deleteRow(id);
+                        } else break;
+                    }
+                }
+                System.out.println("Select from the following options:" + "\n" +
+                        "1.Appointment\n" +
+                        "2.Emergency Room\n" +
+                        "3.Bill");
+                int options = scanner.nextInt();
+                if (options == 1) {
+                    System.out.println("Choose Departments: \n" +
+                            "1. Cardiology \n" +
+                            "2. Orthopedic \n" +
+                            "3. Gynaecology \n" +
+                            "4. Physiotherapy \n");
+                    int department = scanner.nextInt();
+                    switch (department) {
+                        case 1:
+                            while (true) {
+                                System.out.println(Arrays.toString(available(5, 8, doctorsRoom)));
+                                System.out.println("DOCTOR:\t\t\tTIMINGS");
+                                for (int i = 5; i < 8; i++) {
+                                    System.out.println(doctorsRoom[i]);
+                                }
+                                int answer = scanner.nextInt();
+                                if (doctorsRoom[answer + 4].isBlank()) {
+                                    System.out.println(doctorsRoom[answer + 4] + " is not available please select from available doctors.");
+                                } else {
+                                    System.out.println("Enter your id: ");
+                                    String id = scannerString.next();
+                                    tempId[answer + 4] = id;
+                                    tempBooked[answer + 4] = doctorsRoom[answer + 4];
+                                    System.out.println(patient[0] + " Booked: \n" + LocalDate.now() + " " + LocalTime.now() + "\t\t" + doctorsRoom[answer + 4]);
+                                    doctorsRoom[answer + 4] = "";
+                                    break;
+                                }
+                            }
+                            break;
+                        case 2:
+                            while (true) {
+                                System.out.println(Arrays.toString(available(8, 11, doctorsRoom)));
+                                System.out.println("DOCTOR:\t\t\tTIMINGS");
+                                for (int i = 8; i < 11; i++) {
+                                    System.out.println(doctorsRoom[i]);
+                                }
+                                int answer = scanner.nextInt();
+                                if (doctorsRoom[answer + 7].isBlank()) {
+                                    System.out.println(doctorsRoom[answer + 7] + " is not available please select from available doctors.");
+                                } else {
+                                    System.out.println("Enter your id: ");
+                                    String id = scannerString.next();
+                                    tempId[answer + 7] = id;
+                                    tempBooked[answer + 7] = doctorsRoom[answer + 7];
+                                    System.out.println(patient[0] + " Booked: \n" + LocalDate.now() + " " + LocalTime.now() + "\t\t" + doctorsRoom[answer + 7]);
+                                    doctorsRoom[answer + 7] = "";
+                                    break;
+                                }
+                            }
+                            break;
+                        case 3:
+                            while (true) {
+                                System.out.println(Arrays.toString(available(11, 14, doctorsRoom)));
+                                System.out.println("DOCTOR:\t\t\tTIMINGS");
+                                for (int i = 11; i < 14; i++) {
+                                    System.out.println(doctorsRoom[i]);
+                                }
+                                int answer = scanner.nextInt();
+                                if (doctorsRoom[answer + 10].isBlank()) {
+                                    System.out.println(doctorsRoom[answer + 7] + " is not available please select from available doctors.");
+                                } else {
+                                    System.out.println("Enter your id: ");
+                                    String id = scannerString.next();
+                                    tempId[answer + 10] = id;
+                                    tempBooked[answer + 10] = doctorsRoom[answer + 7];
+                                    System.out.println(patient[0] + " Booked: \n" + LocalDate.now() + " " + LocalTime.now() + "\t\t" + doctorsRoom[answer + 10]);
+                                    doctorsRoom[answer + 10] = "";
+                                    break;
+                                }
+                            }
+                            break;
+                        case 4:
+                            while (true) {
+                                System.out.println(Arrays.toString(available(14, 17, doctorsRoom)));
+                                System.out.println("DOCTOR:\t\t\tTIMINGS");
+                                for (int i = 14; i < 17; i++) {
+                                    System.out.println(doctorsRoom[i]);
+                                }
+                                int answer = scanner.nextInt();
+                                if (doctorsRoom[answer + 13].isBlank()) {
+                                    System.out.println(doctorsRoom[answer + 13] + " is not available please select from available doctors.");
+                                } else {
+                                    System.out.println("Enter your id: ");
+                                    String id = scannerString.next();
+                                    tempId[answer + 13] = id;
+                                    tempBooked[answer + 13] = doctorsRoom[answer + 7];
+                                    System.out.println(patient[0] + " Booked: \n" + LocalDate.now() + " " + LocalTime.now() + "\t\t" + doctorsRoom[answer + 13]);
+                                    doctorsRoom[answer + 13] = "";
+                                    break;
+                                }
+
+                            }
+                    }
+                } else if (options == 2) {
+
+                    while (true) {
+                        System.out.println("We have following rooms available:\n" + Arrays.toString(available(0, 5, doctorsRoom)));
+                        System.out.println("Enter room n.o: ");
+                        int roomNumber = scanner.nextInt();
+
+                        if (doctorsRoom[roomNumber - 1].isBlank()) {
+                            System.out.println("Room " + roomNumber + " is already booked. Please select from available rooms.");
+                        } else if (roomNumber <= 5) {
+                            System.out.println("Enter your id: ");
+                            String id = scannerString.next();
+                            tempId[roomNumber - 1] = id;
+                            tempBooked[roomNumber - 1] = doctorsRoom[roomNumber - 1];
+                            System.out.println("You have booked:" + doctorsRoom[roomNumber - 1]);
+                            doctorsRoom[roomNumber - 1] = "";
+                            break;
+                        } else {
+                            System.out.println("Room " + roomNumber + " does not exists. Please select from available rooms.");
+                        }
+                    }
+                } else if (options == 3) {
+
+
+                    System.out.println("1.Bill for room.\n" +
+                            "2.Bill for appointment");
+                    int option = scanner.nextInt();
+                    System.out.println("Enter your id: ");
+                    String id = scannerString.next();
+                    if (option == 1) {
+                        int index =
+                                linearSearch(tempId, id, 0);
+                        tempId[index] = "0";
+                        doctorsRoom[index] = tempBooked[index];
+                        tempBooked[index] = "";
+                        System.out.println("Now available rooms are: ");
+                        System.out.println(Arrays.toString(doctorsRoom));
+                        System.out.println("Bill for your room : Rs " + bill(patient));
+                    } else if (option == 2) {
+                        int index =
+                                linearSearch(tempId, id, 0);
+                        tempId[index] = "0";
+                        doctorsRoom[index] = tempBooked[index];
+                        tempBooked[index] = "";
+                        System.out.println("Now available doctors  are: ");
+                        System.out.println(Arrays.toString(doctorsRoom));
+                        System.out.println("Bill for your room : Rs " + bill(patient));
+                    }
+                }
+            }
+         else if (choice == 2) {
+        } else if (choice == 3) {
+        } else if (choice == 4) {
+            //logOut(choice);
+        } else break;
+    }
+        }
+
+
+    public static void displayPatientData(String[] patient) {
+
+        System.out.println("Welcome " + patient[1] + "\nid: " + patient[0] + "\n" +
+                "Welcome to Patient Zone" + "\n" +
+                "Your data is as follow: " + "\n" +
+                "Email: " + patient[2] + "\n" +
+                "Date of birth: " + patient[4] + "\n" +
+                "Age: " + patient[10] + "\n" +
+                "Gender: " + patient[5] + "\n" +
+                "Martial Status: " + patient[6] + "\n" +
+                "Disease: " + patient[7] + "\n" +
+                "Room Type: " + patient[8] + "\n" +
+                "Contact number: " + patient[9]);
+
+
+    }
+
+    public static void write(String[] array) {
+        String row = String.join(",", array);
+        try (
+                FileWriter fw = new FileWriter("data.txt", true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                PrintWriter out = new PrintWriter(bw)
+        ) {
+            out.println(row);
+        } catch (IOException e) {
+            // File writing/opening failed at some stage.
+        }
+
+    }
+
+    public static String[] read(String id,int index) {
+        String[] data1 = {};
+        try {
+            System.out.println("reading start");
+
+            Scanner myFileReader = new Scanner(new File("data.txt"));
+            while (myFileReader.hasNextLine()) {
+                String line = myFileReader.nextLine();
+                String[] data = line.split(",");
+                if (data[index].equals(id)) {
+                    myFileReader.close();
+                    return data;
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return data1;
+    }
+
+    public static void deleteRow(String id) throws IOException {
+        String tempFile = "temp.txt";
+        File oldFile = new File("data.txt");
+        File newFile = new File(tempFile);
+
+        String currentLine;
+        String data[];
+        try {
+            FileWriter fw = new FileWriter(tempFile, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+
+            FileReader fr = new FileReader("data.txt");
+            BufferedReader br = new BufferedReader(fr);
+
+            while ((currentLine = br.readLine()) != null) {
+                data = currentLine.split(",");
+                if (!data[0].equalsIgnoreCase(id)) {
+                    pw.println(currentLine);
+                } else System.out.printf("%s's data deleted\n", data[1]);
+            }
+            pw.flush();
+            pw.close();
+            fr.close();
+            br.close();
+            bw.close();
+            fw.close();
+
+            oldFile.delete();
+            File dump = new File("data.txt");
+            newFile.renameTo(dump);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public static int bill(String[] patient) {
+        Scanner scanner = new Scanner(System.in);
+        int numberOfDays, economyPerDay, businessPerDay,  fare = 0;
+        System.out.println("1.Bill for room.\n" +
+                "2.Bill for appointment");
+        int option = scanner.nextInt();
+        if (option == 1) {
+            System.out.println("Enter number of days you want to stay in a room: ");
+            numberOfDays = scanner.nextInt();
+
+            if (patient[8].equals("economy")) {
+                economyPerDay = 2000;
+                fare = economyPerDay * numberOfDays;
+
+            } else if (patient[8].equals("business")) {
+                businessPerDay = 5000;
+                fare= businessPerDay * numberOfDays;
+            }
+            return fare;
+        } else if (option == 2) {
+            fare = 5000;
+        }
+
+        return fare;
+    }
+    /*public static void addRoomNo(String id , String room) throws IOException {
+        String[] patient = read(id);
+        deleteRow(id);
+        String[] newPatient = new String[patient.length+1];
+        for (int i = 0 ; i< patient.length;i++){
+            newPatient[i] = patient[i];
+        }
+        newPatient[newPatient.length-1] = room;
+        write(newPatient);
+    }
+
+     */
+    /*public static void deleteRoomNo(String id ) throws IOException {
+        String[] newPatient = read(id);
+        deleteRow(id);
+        String[] patient1 = new String[newPatient.length-1];
+        for (int i = 0 ; i< patient1.length;i++){
+            patient1[i]=newPatient[i]  ;
+        }
+        write(patient1);
+    }
+
+     */
+    public static int linearSearch(String[] tempId,String id ,int start){
+        int index = 0;
+        for (int i = start ; i< tempId.length ; i ++ ){
+            if (tempId[i].equals(id)){
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
+    public static String[] available(int start , int end , String[] doctorsRoom){
+        String[] available = new String[end];
+        for (int i = start ; i <end ; i++ ){
+            available[i] = doctorsRoom[i];
+        }
+        return available;
+    }
+}
